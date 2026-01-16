@@ -1,4 +1,6 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 
 plugins {
     kotlin("jvm") version "${KOTLIN_VERSION}"
@@ -69,3 +71,4 @@ tasks.register<Copy>("buildAndCopyToRunMods") {
         requireOrCopy(serverAotSource, serverAotTarget, "HytaleServer.aot")
     }
 }
+
