@@ -3,7 +3,7 @@
     <option name="JAR_PATH" value="$PROJECT_DIR$/run/Server/HytaleServer.jar" />
     <option name="VM_PARAMETERS" value="-XX:AOTCache=Server/HytaleServer.aot" />
     <option name="PROGRAM_PARAMETERS" value="--assets Assets.zip" />
-    <option name="WORKING_DIRECTORY" value="C:\Users\System32\IdeaProjects\Hytale\UltimateLobby\run" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="ALTERNATIVE_JRE_PATH" value="25" />
     <method v="2">

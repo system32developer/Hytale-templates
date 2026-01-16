@@ -71,4 +71,3 @@ tasks.register<Copy>("buildAndCopyToRunMods") {
         requireOrCopy(serverAotSource, serverAotTarget, "HytaleServer.aot")
     }
 }
-

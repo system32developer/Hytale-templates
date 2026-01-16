@@ -1,0 +1,12 @@
+{
+  "Group": "${BUILD_COORDS.groupId}",
+  "Name": "${PLUGIN_NAME}",
+  "Version": "${BUILD_COORDS.version}",
+  "Authors": [
+    {
+      "Name": "${AUTHORS.toString(", ", "", "")}"
+    }
+  ],
+  "Main": "${MAIN_CLASS}",
+  "ServerVersion": "*"
+}
