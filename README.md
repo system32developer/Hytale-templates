@@ -39,7 +39,9 @@ This project allows to create simple plugins using Hytale API with one click, it
 
 10. If you see this error:
 <img width="1454" height="239" alt="image" src="https://github.com/user-attachments/assets/bb59c0aa-ba8c-497d-9749-b81f5a4bb171" />
+
 Just click Sync all Gradle Projects
+
 <img width="471" height="178" alt="image" src="https://github.com/user-attachments/assets/81f72abb-0595-4a51-a93c-c7283be19695" />
 
 
