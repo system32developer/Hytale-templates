@@ -1,10 +1,8 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import java.nio.file.Files
-import java.nio.file.StandardCopyOption
 
 plugins {
     kotlin("jvm") version "${KOTLIN_VERSION}"
     id("com.gradleup.shadow") version "8.3.0"
+    id("app.ultradev.hytalegradle") version "1.5.0"
 }
 
 val hytaleHome = "${System.getProperty("user.home")}/AppData/Roaming/Hytale"
@@ -26,48 +24,10 @@ tasks.shadowJar {
     archiveClassifier.set("")
 }
 
-tasks.register<Copy>("buildAndCopyToRunMods") {
-    dependsOn(tasks.named<ShadowJar>("shadowJar"))
-
-    val runDir = file("run")
-    if (!runDir.exists()) runDir.mkdirs()
-    val runModsDir = file("run/mods")
-    val runServerDir = file("run/Server")
-
-    val hytaleHomeDir = file(hytaleHome)
-
-    val assetsSource = hytaleHomeDir.resolve("$hytaleServer/Assets.zip")
-    val serverJarSource = hytaleHomeDir.resolve("$hytaleServer/Server/HytaleServer.jar")
-
-    val serverAotSource = hytaleHomeDir.resolve("$hytaleServer/Server/HytaleServer.aot")
-
-    val assetsTarget = runDir.resolve("Assets.zip")
-    val serverJarTarget = runServerDir.resolve("HytaleServer.jar")
-    val serverAotTarget = runServerDir.resolve("HytaleServer.aot")
-
-    from(tasks.named<ShadowJar>("shadowJar").flatMap { it.archiveFile })
-    into(runModsDir)
-
-    doFirst {
-        runModsDir.mkdirs()
-        runServerDir.mkdirs()
-
-        fun requireOrCopy(source: File, target: File, name: String) {
-            if (!target.exists()) {
-                if (!source.exists()) {
-                    error("❌ Not found $name on /run neither Hytale Home:\n${source.absolutePath}")
-                }
-                println("📦 Copying $name from Hytale Home")
-                Files.copy(
-                    source.toPath(),
-                    target.toPath(),
-                    StandardCopyOption.REPLACE_EXISTING
-                )
-            }
-        }
-
-        requireOrCopy(assetsSource, assetsTarget, "Assets.zip")
-        requireOrCopy(serverJarSource, serverJarTarget, "HytaleServer.jar")
-        requireOrCopy(serverAotSource, serverAotTarget, "HytaleServer.aot")
-    }
+hytale {
+    // (allows you to run `/op self` in-game)
+    allowOp.set(true)
+    // "release" or "pre-release"
+    patchline.set("release")
+    includeLocalMods.set(true)
 }
