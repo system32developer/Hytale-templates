@@ -1,0 +1,172 @@
+{
+  "version": 1,
+  "group": "plugin",
+  "properties": [
+    {
+      "name": "BUILD_COORDS",
+      "type": "build_system_coordinates",
+      "order": 10
+    },
+    {
+      "name": "LANGUAGE",
+      "type": "string",
+      "options": [
+        "Java",
+        "Kotlin"
+      ]
+    },
+    {
+      "name": "KOTLIN_VERSION",
+      "type": "maven_artifact_version",
+      "parameters": {
+        "sourceUrl": "https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib-jdk8/maven-metadata.xml"
+      },
+      "visible": {
+        "dependsOn": ["LANGUAGE"],
+        "condition": "$LANGUAGE == 'Kotlin'"
+      }
+    },
+    {
+      "name": "PLUGIN_NAME",
+      "type": "string",
+      "inheritFrom": "PROJECT_NAME"
+    },
+    {
+      "name": "MAIN_CLASS",
+      "type": "class_fqn",
+      "derives": {
+        "parents": ["BUILD_COORDS", "PLUGIN_NAME"],
+        "method": "suggestClassName"
+      }
+    },
+    {
+      "label": "creator.ui.optional_settings.label",
+      "collapsible": true,
+      "groupProperties": [
+        {
+          "name": "DESCRIPTION",
+          "type": "string",
+          "default": "",
+          "nullIfDefault": true
+        },
+        {
+          "name": "AUTHORS",
+          "type": "inline_string_list",
+          "default": "",
+          "nullIfDefault": true
+        },
+        {
+          "name": "WEBSITE",
+          "type": "string",
+          "default": "",
+          "nullIfDefault": true
+        }
+      ]
+    },
+    {
+      "name": "JAVA_VERSION",
+      "type": "integer",
+      "order": 20,
+      "default": 25,
+      "visible": false
+    },
+    {
+      "name": "JDK",
+      "type": "jdk",
+      "order": 20,
+      "default": "JAVA_VERSION"
+    }
+  ],
+  "files": [
+    {
+      "template": "../${BUILD_SYSTEM}.gitignore.ft",
+      "destination": ".gitignore",
+      "condition": "$USE_GIT"
+    },
+    {
+      "template": "build.gradle.ft",
+      "destination": "build.gradle",
+      "condition": "$LANGUAGE=='Java'"
+    },
+    {
+      "template": "settings.gradle.ft",
+      "destination": "settings.gradle",
+      "condition": "$LANGUAGE=='Java'"
+    },
+    {
+      "template": "build.gradle.kts.ft",
+      "destination": "build.gradle.kts",
+      "condition": "$LANGUAGE=='Kotlin'"
+    },
+    {
+      "template": "settings.gradle.kts.ft",
+      "destination": "settings.gradle.kts",
+      "condition": "$LANGUAGE=='Kotlin'"
+    },
+    {
+      "template": "gradle.properties.ft",
+      "destination": "gradle.properties"
+    },
+    {
+      "template": "../gradle-wrapper.properties.ft",
+      "destination": "gradle/wrapper/gradle-wrapper.properties"
+    },
+    {
+      "template": "manifest.json.ft",
+      "destination": "src/main/resources/manifest.json"
+    },
+    {
+      "template": "MainClass.java.ft",
+      "destination": "src/main/java/${MAIN_CLASS.path}.java",
+      "condition": "$LANGUAGE=='Java'",
+      "openInEditor": true
+    },
+    {
+      "template": "MainClass.kt.ft",
+      "destination": "src/main/kotlin/${MAIN_CLASS.path}.kt",
+      "condition": "$LANGUAGE=='Kotlin'",
+      "openInEditor": true
+    },
+    {
+      "template": "MainCommand.kt.ft",
+      "destination": "src/main/kotlin/${MAIN_CLASS.packagePath}/commands/MainCommand.kt",
+      "condition": "$LANGUAGE=='Kotlin'",
+      "openInEditor": true
+    },
+    {
+      "template": "MainCommand.java.ft",
+      "destination": "src/main/java/${MAIN_CLASS.packagePath}/commands/MainCommand.java",
+      "condition": "$LANGUAGE=='Java'",
+      "openInEditor": true
+    },
+    {
+      "template": "EventExample.java.ft",
+      "destination": "src/main/java/${MAIN_CLASS.packagePath}/events/EventExample.java",
+      "condition": "$LANGUAGE=='Java'",
+      "openInEditor": true
+    },
+    {
+      "template": "EventExample.kt.ft",
+      "destination": "src/main/kotlin/${MAIN_CLASS.packagePath}/events/EventExample.kt",
+      "condition": "$LANGUAGE=='Kotlin'",
+      "openInEditor": true
+    },
+    {
+      "template": "../runServer.xml.ft",
+      "destination": ".idea/runConfigurations/runServer.xml"
+    }
+  ],
+  "finalizers": [
+    {
+      "type": "import_gradle_project"
+    },
+    {
+      "type": "run_gradle_tasks",
+      "tasks": ["wrapper"]
+    },
+    {
+      "type": "git_add_all",
+      "condition": "$USE_GIT"
+    }
+  ]
+}

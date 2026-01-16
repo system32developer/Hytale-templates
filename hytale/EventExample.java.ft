@@ -1,0 +1,21 @@
+package ${MAIN_CLASS.packageName}.events;
+
+import com.hypixel.hytale.server.core.event.events.player.PlayerConnectEvent;
+import com.hypixel.hytale.server.core.Message;
+
+public final class EventExample {
+
+    private EventExample() {
+        // Utility class
+    }
+
+    public static void onPlayerConnect(PlayerConnectEvent event) {
+        if (event.getPlayer() == null) {
+            return;
+        }
+
+        event.getPlayer().sendMessage(
+            Message.raw("Welcome to the server")
+        );
+    }
+}

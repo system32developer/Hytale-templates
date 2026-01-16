@@ -1,0 +1,11 @@
+package ${MAIN_CLASS.packageName}.events
+
+import com.hypixel.hytale.server.core.event.events.player.PlayerConnectEvent
+import com.hypixel.hytale.server.core.Message
+
+object EventExample {
+    fun onPlayerConnect(event: PlayerConnectEvent) {
+        val player = event.player ?: return
+        player.sendMessage(Message.raw("Welcome to the server"))
+    }
+}

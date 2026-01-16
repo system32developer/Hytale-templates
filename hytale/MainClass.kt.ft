@@ -1,0 +1,30 @@
+package ${MAIN_CLASS.packageName}
+
+import com.hypixel.hytale.server.core.plugin.JavaPluginInit
+import com.hypixel.hytale.server.core.command.system.CommandManager
+import com.hypixel.hytale.server.core.plugin.JavaPlugin
+import com.hypixel.hytale.server.core.event.events.player.PlayerConnectEvent
+import ${MAIN_CLASS.packageName}.events.EventExample
+import ${MAIN_CLASS.packageName}.commands.MainCommand
+
+class ${MAIN_CLASS.className}(init: JavaPluginInit) : JavaPlugin(init) {
+    
+    companion object {
+        lateinit var instance: ${MAIN_CLASS.className}
+    }
+
+    override fun setup() {
+        instance = this
+        CommandManager.get().register(MainCommand())
+        eventRegistry.register(PlayerConnectEvent::class.java, EventExample::onPlayerConnect)
+        println("Setting up the plugin")
+    }
+
+    override fun start() {
+        println("Starting the plugin")
+    }
+
+    override fun shutdown() {
+        println("Shutting down the plugin")
+    }
+}

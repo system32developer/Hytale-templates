@@ -1,0 +1,74 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
+
+plugins {
+    id 'java'
+    id "com.gradleup.shadow" version "8.3.0"
+}
+
+def hytaleHome = "${System.getProperty('user.home')}/AppData/Roaming/Hytale"
+def hytaleServer = "install/release/package/game/latest"
+
+group = '${BUILD_COORDS.groupId}'
+version = '${BUILD_COORDS.version}'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly files("${hytaleHome}/${hytaleServer}/Server/HytaleServer.jar")
+}
+
+tasks.named('shadowJar', ShadowJar) {
+    archiveClassifier.set('')
+}
+
+tasks.register('buildAndCopyToRunMods', Copy) {
+    dependsOn tasks.named('shadowJar')
+
+    def runDir = file('run')
+    def runModsDir = file('run/mods')
+    def runServerDir = file('run/Server')
+
+    def hytaleHomeDir = file(hytaleHome)
+
+    def assetsSource = new File(hytaleHomeDir, "${hytaleServer}/Assets.zip")
+    def serverJarSource = new File(hytaleHomeDir, "${hytaleServer}/Server/HytaleServer.jar")
+    def serverAotSource = new File(hytaleHomeDir, "${hytaleServer}/Server/HytaleServer.aot")
+
+    def assetsTarget = new File(runDir, 'Assets.zip')
+    def serverJarTarget = new File(runServerDir, 'HytaleServer.jar')
+    def serverAotTarget = new File(runServerDir, 'HytaleServer.aot')
+
+    from(tasks.named('shadowJar').flatMap { it.archiveFile })
+    into(runModsDir)
+
+    doFirst {
+        runDir.mkdirs()
+        runModsDir.mkdirs()
+        runServerDir.mkdirs()
+
+        def requireOrCopy = { File source, File target, String name ->
+            if (!target.exists()) {
+                if (!source.exists() || source.isDirectory()) {
+                    throw new GradleException(
+                        "❌ Not found ${name} on /run neither Hytale Home:\n${source.absolutePath}"
+                    )
+                }
+
+                println "📦 Copying ${name} from Hytale Home"
+                Files.copy(
+                    source.toPath(),
+                    target.toPath(),
+                    StandardCopyOption.REPLACE_EXISTING
+                )
+            }
+        }
+
+        requireOrCopy(assetsSource, assetsTarget, 'Assets.zip')
+        requireOrCopy(serverJarSource, serverJarTarget, 'HytaleServer.jar')
+        requireOrCopy(serverAotSource, serverAotTarget, 'HytaleServer.aot')
+    }
+}

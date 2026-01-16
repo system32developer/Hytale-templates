@@ -1,0 +1,37 @@
+package ${MAIN_CLASS.packageName};
+
+import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
+import com.hypixel.hytale.server.core.command.system.CommandManager;
+import com.hypixel.hytale.server.core.plugin.JavaPlugin;
+import com.hypixel.hytale.server.core.event.events.player.PlayerConnectEvent;
+import ${MAIN_CLASS.packageName}.events.EventExample;
+import ${MAIN_CLASS.packageName}.commands.MainCommand;
+
+public class ${MAIN_CLASS.className} extends JavaPlugin {
+
+    public static ${MAIN_CLASS.className} instance;
+
+    public ${MAIN_CLASS.className}(JavaPluginInit init) {
+        super(init);
+    }
+
+    @Override
+    public void setup() {
+        instance = this;
+
+        CommandManager.get().register(new MainCommand());
+        getEventRegistry().register(PlayerConnectEvent.class, EventExample::onPlayerConnect);
+
+        System.out.println("Setting up the plugin");
+    }
+
+    @Override
+    public void start() {
+        System.out.println("Starting the plugin");
+    }
+
+    @Override
+    public void shutdown() {
+        System.out.println("Shutting down the plugin");
+    }
+}
