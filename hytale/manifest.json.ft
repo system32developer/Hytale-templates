@@ -1,5 +1,5 @@
 {
-  "Group": "${BUILD_COORDS.groupId}",
+  "Group": "${PROJECT_NAME}",
   "Name": "${PLUGIN_NAME}",
   "Version": "${BUILD_COORDS.version}",
   "Authors": [
